@@ -8,5 +8,7 @@ public class MenuManager
     {
         WriteLine("1. Ny produkt");
         WriteLine("2. Sök produkt");
+        WriteLine("3. Ny kategori");
+        WriteLine("4. Lägg till produkt till kategori");
     }
 }

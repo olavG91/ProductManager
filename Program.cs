@@ -15,6 +15,10 @@ class Program
             { ConsoleKey.NumPad1, AddProduct },
             { ConsoleKey.D2, SearchProduct },
             { ConsoleKey.NumPad2, SearchProduct },
+            { ConsoleKey.D3, AddCategory },
+            { ConsoleKey.NumPad3, AddCategory },
+            { ConsoleKey.D4, AddProductToCategory },
+            { ConsoleKey.NumPad4, AddProductToCategory },
             { ConsoleKey.D5, () => Environment.Exit(0) },
             { ConsoleKey.NumPad5, () => Environment.Exit(0) }
         };
@@ -196,6 +200,73 @@ class Program
         {
             ShowProduct(product.SKU);
             Clear();
+        }
+    }
+
+    public static void AddCategory()
+    {
+        Clear();
+        WriteLine("Namn:");
+        string category = ReadLine() ?? "";
+        WriteLine("Namn: " + category);
+        WriteLine("Är detta korrekt? (J)a (N)ej");
+        ConsoleKeyInfo keyInfo = ReadKey(true);
+        if (keyInfo.Key == ConsoleKey.J)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                context.Categories.Add(new Category { Name = category });
+                context.SaveChanges();
+                ShowConfirmation("Kategori sparad", false);
+            }
+        }
+        else if (keyInfo.Key == ConsoleKey.N)
+        {
+            Clear();
+            AddCategory();
+        }
+    }
+
+    public static void AddProductToCategory()
+    {
+        Clear();
+        WriteLine("SKU:");
+        string SKU = ReadLine() ?? "";
+        using (var context = new ApplicationDbContext())
+        {
+            var product = context.Products.FirstOrDefault(a => a.SKU == SKU);
+
+            if (product != null)
+            {
+                WriteLine("Namn: " + product.Name);
+                WriteLine("SKU: " + product.SKU);
+                WriteLine("Ange kategori:");
+                string setCategory = ReadLine() ?? "";
+                var category = context.Categories.FirstOrDefault(a => a.Name == setCategory);
+
+                if (category != null)
+                {
+                    if (product.CategoryId != category.Id)
+                    {
+                        product.CategoryId = category.Id;
+                        context.SaveChanges();
+                        ShowConfirmation("Produkt tillagd", false);
+                    }
+                    else
+                    {
+                        ShowConfirmation("Produkt redan tillagd", false);
+                    }
+                }
+                else
+                {
+                    ShowConfirmation("Kategori finns inte", false);
+                }
+            }
+            else
+            {
+                Clear();
+                ShowConfirmation("Produkt hittades inte", false);
+            }
         }
     }
 

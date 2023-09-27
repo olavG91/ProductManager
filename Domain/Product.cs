@@ -10,4 +10,6 @@ public class Product
     public required string Description { get; set; }
     public required string Image { get; set; }
     public required int Price { get; set; }
+
+    public int? CategoryId { get; set; }
 }
