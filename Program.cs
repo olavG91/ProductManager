@@ -2,6 +2,7 @@
 using ProductManager.Domain;
 using ProductManager.Data;
 using ProductManager.Managers;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProductManager;
 
@@ -248,39 +249,43 @@ class Program
         string SKU = ReadLine() ?? "";
         using (var context = new ApplicationDbContext())
         {
-            var product = context.Products.FirstOrDefault(a => a.SKU == SKU);
-
-            if (product != null)
+            try
             {
+                var product = context.Products.FirstOrDefault(a => a.SKU == SKU);
+
+                if (product == null)
+                {
+                    Clear();
+                    ShowConfirmation("Produkt hittades inte", false);
+                    return;
+                }
+
                 WriteLine("Namn: " + product.Name);
                 WriteLine("SKU: " + product.SKU);
                 WriteLine("Ange kategori:");
                 string setCategory = ReadLine() ?? "";
                 var category = context.Categories.FirstOrDefault(a => a.Name == setCategory);
 
-                if (category != null)
-                {
-                    if (product.Category == null)
-                    {
-                        product.Category = category;
-                        category.Products.Add(product);
-                        context.SaveChanges();
-                        ShowConfirmation("Produkt tillagd", false);
-                    }
-                    else
-                    {
-                        ShowConfirmation("Produkt redan tillagd", false);
-                    }
-                }
-                else
+                if (category == null)
                 {
                     ShowConfirmation("Kategori finns inte", false);
+                    return;
                 }
+
+                if (product.Category != null && product.Category.Id == category.Id)
+                {
+                    ShowConfirmation("Produkt redan tillagd", false);
+                    return;
+                }
+
+                product.Category = category;
+                category.Products.Add(product);
+                context.SaveChanges();
+                ShowConfirmation("Produkt tillagd", false);
             }
-            else
+            catch (Exception ex)
             {
-                Clear();
-                ShowConfirmation("Produkt hittades inte", false);
+                ShowConfirmation($"Ett fel inträffade: {ex.Message}", false);
             }
         }
     }
@@ -290,10 +295,23 @@ class Program
         Clear();
         using (var context = new ApplicationDbContext())
         {
-            var categories = context.Categories.ToList();
-            foreach (var category in categories)
+            var categories = context.Categories.Include(c => c.Products).ToList();
+            if (categories.Count > 0)
             {
-                WriteLine(category.Name);
+                foreach (var category in categories)
+                {
+                    int productCount = category.Products.Count;
+                    WriteLine($"{category.Name} ({productCount})");
+
+                    foreach (var product in category.Products)
+                    {
+                        WriteLine($"    {product.Name}      {product.Price} SEK");
+                    }
+                }
+            }
+            else
+            {
+                ShowConfirmation("Inga kategorier hittade.", false);
             }
         }
     }
