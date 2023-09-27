@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace ProductManager.Models;
+namespace ProductManager.Domain;
 
 public class Product
 {

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using ProductManager.Models;
+using ProductManager.Domain;
 
 namespace ProductManager.Data
 {

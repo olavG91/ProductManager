@@ -1,5 +1,6 @@
 ﻿using static System.Console;
 using ProductManager.Domain;
+using ProductManager.Data;
 
 namespace ProductManager;
 
@@ -48,7 +49,11 @@ class Program
         newProduct.Image = ReadLine();
 
         WriteLine("Pris:");
-        newProduct.Price = ReadLine();
+        int price;
+        if (int.TryParse(ReadLine(), out price))
+        {
+            newProduct.Price = price;
+        }
 
         using (var context = new ApplicationDbContext())
         {
