@@ -260,9 +260,10 @@ class Program
 
                 if (category != null)
                 {
-                    if (product.Category == null || product.Category.Id != category.Id)
+                    if (product.Category == null)
                     {
                         product.Category = category;
+                        category.Products.Add(product);
                         context.SaveChanges();
                         ShowConfirmation("Produkt tillagd", false);
                     }
