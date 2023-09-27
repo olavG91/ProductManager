@@ -19,8 +19,10 @@ class Program
             { ConsoleKey.NumPad3, AddCategory },
             { ConsoleKey.D4, AddProductToCategory },
             { ConsoleKey.NumPad4, AddProductToCategory },
-            { ConsoleKey.D5, () => Environment.Exit(0) },
-            { ConsoleKey.NumPad5, () => Environment.Exit(0) }
+            { ConsoleKey.D5, ListCategories },
+            { ConsoleKey.NumPad5, ListCategories },
+            { ConsoleKey.D6, () => Environment.Exit(0) },
+            { ConsoleKey.NumPad6, () => Environment.Exit(0) }
         };
 
         while (true)
@@ -69,6 +71,10 @@ class Program
         {
             Clear();
             AddProduct();
+        }
+        else
+        {
+            Clear();
         }
     }
 
@@ -170,6 +176,10 @@ class Program
             Clear();
             UpdateProduct(product);
         }
+        else
+        {
+            Clear();
+        }
     }
 
     public static void DeleteProduct(Product product)
@@ -225,6 +235,10 @@ class Program
             Clear();
             AddCategory();
         }
+        else
+        {
+            Clear();
+        }
     }
 
     public static void AddProductToCategory()
@@ -246,9 +260,9 @@ class Program
 
                 if (category != null)
                 {
-                    if (product.CategoryId != category.Id)
+                    if (product.Category == null || product.Category.Id != category.Id)
                     {
-                        product.CategoryId = category.Id;
+                        product.Category = category;
                         context.SaveChanges();
                         ShowConfirmation("Produkt tillagd", false);
                     }
@@ -266,6 +280,19 @@ class Program
             {
                 Clear();
                 ShowConfirmation("Produkt hittades inte", false);
+            }
+        }
+    }
+
+    public static void ListCategories()
+    {
+        Clear();
+        using (var context = new ApplicationDbContext())
+        {
+            var categories = context.Categories.ToList();
+            foreach (var category in categories)
+            {
+                WriteLine(category.Name);
             }
         }
     }

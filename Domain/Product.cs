@@ -11,5 +11,5 @@ public class Product
     public required string Image { get; set; }
     public required int Price { get; set; }
 
-    public int? CategoryId { get; set; }
+    public Category Category { get; set; }
 }
