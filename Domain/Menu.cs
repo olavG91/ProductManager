@@ -1,9 +1,11 @@
+using static System.Console;
+
 namespace ProductManager.Domain;
 
-public static class MenuManager
+public class MenuManager
 {
     public static void InitializeMenu()
     {
-        Console.Write("Menu");
+        WriteLine("1. Ny produkt");
     }
 }
