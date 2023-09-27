@@ -7,5 +7,6 @@ public class MenuManager
     public static void InitializeMenu()
     {
         WriteLine("1. Ny produkt");
+        WriteLine("2. Sök produkt");
     }
 }
