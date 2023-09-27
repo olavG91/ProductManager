@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using ProductManager.Domain;
+
+namespace ProductManager;
+
+class Program
+{
+    static void Main()
+    {
+        MenuManager.InitializeMenu();
+    }
+}
