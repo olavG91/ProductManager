@@ -4,9 +4,10 @@ namespace ProductManager.Domain;
 
 public class Product
 {
-    public string Name { get; set; }
-    public string SKU { get; set; }
-    public string Description { get; set; }
-    public string Image { get; set; }
-    public int Price { get; set; }
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public required string SKU { get; set; }
+    public required string Description { get; set; }
+    public required string Image { get; set; }
+    public required int Price { get; set; }
 }

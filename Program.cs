@@ -35,30 +35,50 @@ class Program
 
     public static void AddProduct()
     {
-        Product newProduct = new Product();
+        string productName;
+        string productSKU;
+        string productDescription;
+        string productImage;
+        int productPrice;
+
         WriteLine("Namn:");
-        newProduct.Name = ReadLine();
+        productName = ReadLine() ?? "";
 
         WriteLine("SKU:");
-        newProduct.SKU = ReadLine();
+        productSKU = ReadLine() ?? "";
 
         WriteLine("Beskrivning:");
-        newProduct.Description = ReadLine();
+        productDescription = ReadLine() ?? "";
 
         WriteLine("Bild (URL):");
-        newProduct.Image = ReadLine();
+        productImage = ReadLine() ?? "";
 
-        WriteLine("Pris:");
         int price;
+        WriteLine("Pris:");
         if (int.TryParse(ReadLine(), out price))
         {
-            newProduct.Price = price;
+            productPrice = price;
         }
+        else
+        {
+            productPrice = 0;
+        }
+
+        Product newProduct = new Product
+        {
+            Name = productName,
+            SKU = productSKU,
+            Description = productDescription,
+            Image = productImage,
+            Price = productPrice
+        };
 
         using (var context = new ApplicationDbContext())
         {
             context.Products.Add(newProduct);
             context.SaveChanges();
         }
+
+        Clear();
     }
 }
