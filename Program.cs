@@ -49,5 +49,11 @@ class Program
 
         WriteLine("Pris:");
         newProduct.Price = ReadLine();
+
+        using (var context = new ApplicationDbContext())
+        {
+            context.Products.Add(newProduct);
+            context.SaveChanges();
+        }
     }
 }

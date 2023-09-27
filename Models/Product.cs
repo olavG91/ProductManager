@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+namespace ProductManager.Models;
+
 public class Product
 {
     public string Name { get; set; }
