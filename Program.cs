@@ -75,6 +75,7 @@ class Program
         }
         else
         {
+            WaitUntil(ConsoleKey.Escape);
             Clear();
         }
     }
@@ -179,6 +180,7 @@ class Program
         }
         else
         {
+            WaitUntil(ConsoleKey.Escape);
             Clear();
         }
     }
@@ -238,6 +240,7 @@ class Program
         }
         else
         {
+            WaitUntil(ConsoleKey.Escape);
             Clear();
         }
     }
@@ -308,6 +311,9 @@ class Program
                         WriteLine($"    {product.Name}      {product.Price} SEK");
                     }
                 }
+
+                WaitUntil(ConsoleKey.Escape);
+                Clear();
             }
             else
             {
