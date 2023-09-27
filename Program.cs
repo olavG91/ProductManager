@@ -1,6 +1,7 @@
 ﻿using static System.Console;
 using ProductManager.Domain;
 using ProductManager.Data;
+using ProductManager.Managers;
 
 namespace ProductManager;
 
@@ -35,50 +36,43 @@ class Program
 
     public static void AddProduct()
     {
-        string productName;
-        string productSKU;
-        string productDescription;
-        string productImage;
-        int productPrice;
+        var (productName, productSKU, productDescription, productImage, productPrice) =
+            ProductInputManager.CollectProductData();
 
-        WriteLine("Namn:");
-        productName = ReadLine() ?? "";
+        Clear();
 
-        WriteLine("SKU:");
-        productSKU = ReadLine() ?? "";
+        WriteLine("Namn: " + productName);
+        WriteLine("SKU: " + productSKU);
+        WriteLine("Beskrivning: " + productDescription);
+        WriteLine("Bild (URL): " + productImage);
+        WriteLine("Pris: " + productPrice);
 
-        WriteLine("Beskrivning:");
-        productDescription = ReadLine() ?? "";
+        WriteLine("Är detta korekt? (J)a (N)ej");
 
-        WriteLine("Bild (URL):");
-        productImage = ReadLine() ?? "";
-
-        int price;
-        WriteLine("Pris:");
-        if (int.TryParse(ReadLine(), out price))
+        ConsoleKeyInfo keyInfo = ReadKey(true);
+        if (keyInfo.Key == ConsoleKey.J)
         {
-            productPrice = price;
+            Product newProduct = new Product
+            {
+                Name = productName,
+                SKU = productSKU,
+                Description = productDescription,
+                Image = productImage,
+                Price = productPrice
+            };
+
+            using (var context = new ApplicationDbContext())
+            {
+                context.Products.Add(newProduct);
+                context.SaveChanges();
+            }
+
+            Clear();
         }
         else
         {
-            productPrice = 0;
+            Clear();
+            AddProduct();
         }
-
-        Product newProduct = new Product
-        {
-            Name = productName,
-            SKU = productSKU,
-            Description = productDescription,
-            Image = productImage,
-            Price = productPrice
-        };
-
-        using (var context = new ApplicationDbContext())
-        {
-            context.Products.Add(newProduct);
-            context.SaveChanges();
-        }
-
-        Clear();
     }
 }
